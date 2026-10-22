@@ -1,39 +1,128 @@
 {
-  "generated_at": "2026-10-22T04:53:46.541149+00:00",
+  "generated_at": "2026-10-22T05:01:13.582709+00:00",
+  "model_version": 2,
   "device": {
     "module": "WSSFM10R4AT / SFM10R4",
     "pcb": "ZP_V06",
     "tx_mhz": 920.8,
     "band": "Sigfox RC4"
   },
-  "geometry": {
-    "monopole_height_mm": 75.0,
-    "steel_span_mm": 120.0,
-    "steel_clearance_in_mm": 5.0,
-    "steel_clearance_out_mm": 32.0,
-    "quarter_wave_mm": 81.39456396611642
+  "geometry_documentation": {
+    "helix_outer_diameter_mm": 10.0,
+    "helix_axial_height_mm": 22.0,
+    "helix_pitch_mm": 4.0,
+    "helix_wire_diameter_mm": 0.5,
+    "helix_approx_wire_length_mm": 194.78745,
+    "steel_braid_diameter_mm": 1.3,
+    "steel_height_mm": 17.0,
+    "steel_span_extended_mm": 170.0,
+    "steel_span_reeled_mm": 75.0,
+    "spool_ring_radius_mm": 11.0,
+    "battery_center_x_mm": 48.0,
+    "enclosure_epsilon_eff": 1.45,
+    "quarter_wave_mm": 81.39456396611642,
+    "lambda_over_10_mm": 32.55782558644657
   },
-  "pi_match_optimized_on": "steel_out",
+  "baseline_case_id": "steel_out_32",
+  "pi_match_optimized_on": "steel_out_32",
   "pi_match": {
-    "c1_pf": 5.999290482668429,
-    "l_nh": 2.0015397473973042,
-    "c2_pf": 3.894995513597188
+    "c1_pf": 5.99483336616412,
+    "l_nh": 2.0026697215606104,
+    "c2_pf": 3.706178363572306
   },
-  "metrics": {
-    "f_res_out_mhz": 908.0,
-    "f_res_in_mhz": 885.0,
-    "delta_f_res_mhz": -23.0,
-    "s11_out_db_at_920_8": -6.04229949336116,
-    "s11_in_db_at_920_8": -4.012014170375728,
-    "delta_s11_db_at_920_8": 2.0302853229854314,
-    "estimated_link_penalty_db": 1.1539633560013298
-  },
-  "assumptions": [
-    "Helical modeled as 75 mm monopole over perfect ground (NEC) plus coupled parasitic mode.",
-    "Steel pull-wire: 1.2 mm \u00d7 120 mm horizontal segment at 35 mm height.",
-    "Pi-match components optimized with steel OUT (\u226530 mm keep-out), then frozen for IN case.",
-    "Plastic enclosure, PCB copper keep-out, and helix pitch not fully meshed (not HFSS).",
-    "Hypothesis: metal within ~\u03bb/10 (~33 mm @ 920 MHz) dominates detuning \u2014 IN case uses 5 mm."
+  "cases": [
+    {
+      "case_id": "steel_out_32",
+      "label_zh": "\u94a2\u7f06\u79fb\u51fa \u226532 mm\uff08\u57fa\u7ebf\uff09",
+      "label_en": "Steel OUT \u226532 mm (baseline)",
+      "clearance_mm": 32.0,
+      "orientation": "perpendicular",
+      "reel": "extended",
+      "f_res_mhz": 915.0,
+      "s11_db_at_920_8": -4.490741936926418,
+      "delta_f_res_mhz_vs_baseline": 0.0,
+      "delta_s11_db_at_920_8_vs_baseline": 0.0,
+      "estimated_link_penalty_db_vs_baseline": 0.0,
+      "nec_f_res_mhz_raw": 947.0
+    },
+    {
+      "case_id": "steel_in_5",
+      "label_zh": "\u94a2\u7f06\u9760\u8fd1 ~5 mm\uff08\u6a2a\u7a7f\u00b7\u5168\u4f38\u51fa\uff09",
+      "label_en": "Steel IN ~5 mm, crossing, extended",
+      "clearance_mm": 5.0,
+      "orientation": "perpendicular",
+      "reel": "extended",
+      "f_res_mhz": 898.0,
+      "s11_db_at_920_8": -2.474313539720016,
+      "delta_f_res_mhz_vs_baseline": -17.0,
+      "delta_s11_db_at_920_8_vs_baseline": 2.016428397206402,
+      "estimated_link_penalty_db_vs_baseline": 1.7136270095344486,
+      "nec_f_res_mhz_raw": 947.0
+    },
+    {
+      "case_id": "steel_15",
+      "label_zh": "\u94a2\u7f06\u95f4\u8ddd 15 mm",
+      "label_en": "Steel clearance 15 mm",
+      "clearance_mm": 15.0,
+      "orientation": "perpendicular",
+      "reel": "extended",
+      "f_res_mhz": 896.0,
+      "s11_db_at_920_8": -2.900877311260521,
+      "delta_f_res_mhz_vs_baseline": -19.0,
+      "delta_s11_db_at_920_8_vs_baseline": 1.5898646256658973,
+      "estimated_link_penalty_db_vs_baseline": 1.214304641425697,
+      "nec_f_res_mhz_raw": 947.0
+    },
+    {
+      "case_id": "steel_25",
+      "label_zh": "\u94a2\u7f06\u95f4\u8ddd 25 mm\uff08\u8fd1 \u03bb/10\uff09",
+      "label_en": "Steel clearance 25 mm (~\u03bb/10)",
+      "clearance_mm": 25.0,
+      "orientation": "perpendicular",
+      "reel": "extended",
+      "f_res_mhz": 915.0,
+      "s11_db_at_920_8": -3.8077507103345787,
+      "delta_f_res_mhz_vs_baseline": 0.0,
+      "delta_s11_db_at_920_8_vs_baseline": 0.6829912265918394,
+      "estimated_link_penalty_db_vs_baseline": 0.42856285087361745,
+      "nec_f_res_mhz_raw": 947.0
+    },
+    {
+      "case_id": "steel_in_5_reeled",
+      "label_zh": "5 mm + \u6536\u5377\uff08\u7ebf\u76d8\u9760\u8fd1\uff09",
+      "label_en": "5 mm + cable reeled (spool near ANT)",
+      "clearance_mm": 5.0,
+      "orientation": "perpendicular",
+      "reel": "reeled",
+      "f_res_mhz": 891.0,
+      "s11_db_at_920_8": -2.2729702119455344,
+      "delta_f_res_mhz_vs_baseline": -24.0,
+      "delta_s11_db_at_920_8_vs_baseline": 2.2177717249808837,
+      "estimated_link_penalty_db_vs_baseline": 1.9906901768961214,
+      "nec_f_res_mhz_raw": 947.0
+    },
+    {
+      "case_id": "steel_in_5_parallel",
+      "label_zh": "5 mm + \u94a2\u7f06\u6bb5 \u2225 \u87ba\u65cb\u8f74",
+      "label_en": "5 mm + cable parallel to helix axis",
+      "clearance_mm": 5.0,
+      "orientation": "parallel",
+      "reel": "extended",
+      "f_res_mhz": 896.0,
+      "s11_db_at_920_8": -3.0070374103881687,
+      "delta_f_res_mhz_vs_baseline": -19.0,
+      "delta_s11_db_at_920_8_vs_baseline": 1.4837045265382494,
+      "estimated_link_penalty_db_vs_baseline": 1.1053186215654995,
+      "nec_f_res_mhz_raw": 947.0
+    }
   ],
-  "nec_note": "PyNEC thin-wire runs show weak direct coupling for horizontal parasitic wire; coupled-resonator overlay calibrated for near-field steel interaction."
+  "assumptions": [
+    "Primary radiator: PyNEC helix (22 mm \u00d7 10 mm OD, 4 mm pitch) on PEC ground.",
+    "Steel: 1.3 mm braided cable, dog-leg across ANT corner; optional vertical segment (parallel case).",
+    "Reeled: 12-segment metal ring spool + shorter 75 mm span.",
+    "Battery: LiPo shell wires at 48 mm from ANT; fixed in all cases.",
+    "Plastic: \u03b5_eff=1.45, extra shunt C \u2014 not full 3D dielectric mesh.",
+    "\u03c0-match optimized on baseline (steel OUT 32 mm), frozen for all cases.",
+    "Still approximate \u2014 confirm with VNA in closed plastic housing."
+  ]
 }

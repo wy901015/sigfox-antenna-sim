@@ -1,0 +1,7 @@
+case_id,label_zh,label_en,clearance_mm,orientation,reel,f_res_mhz,s11_db_at_920_8,delta_f_res_mhz_vs_baseline,delta_s11_db_at_920_8_vs_baseline,estimated_link_penalty_db_vs_baseline,nec_f_res_mhz_raw
+steel_out_32,钢缆移出 ≥32 mm（基线）,Steel OUT ≥32 mm (baseline),32.0,perpendicular,extended,915.0,-4.490741936926418,0.0,0.0,0.0,947.0
+steel_in_5,钢缆靠近 ~5 mm（横穿·全伸出）,"Steel IN ~5 mm, crossing, extended",5.0,perpendicular,extended,898.0,-2.474313539720016,-17.0,2.016428397206402,1.7136270095344486,947.0
+steel_15,钢缆间距 15 mm,Steel clearance 15 mm,15.0,perpendicular,extended,896.0,-2.900877311260521,-19.0,1.5898646256658973,1.214304641425697,947.0
+steel_25,钢缆间距 25 mm（近 λ/10）,Steel clearance 25 mm (~λ/10),25.0,perpendicular,extended,915.0,-3.8077507103345787,0.0,0.6829912265918394,0.42856285087361745,947.0
+steel_in_5_reeled,5 mm + 收卷（线盘靠近）,5 mm + cable reeled (spool near ANT),5.0,perpendicular,reeled,891.0,-2.2729702119455344,-24.0,2.2177717249808837,1.9906901768961214,947.0
+steel_in_5_parallel,5 mm + 钢缆段 ∥ 螺旋轴,5 mm + cable parallel to helix axis,5.0,parallel,extended,896.0,-3.0070374103881687,-19.0,1.4837045265382494,1.1053186215654995,947.0

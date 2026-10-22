@@ -1,56 +1,44 @@
 # sigfox-antenna-sim
 
-GitHub Pages site and reproducible scripts for **Yang Wang**’s Sigfox scaffold-sensor study: how a nearby **steel Hall pull-wire** detunes the **RC4 helical / wire antenna** (~**920.8 MHz**, module **WSSFM10R4AT**, board **ZP_V06**).
+GitHub Pages + reproducible EM case matrix for **Yang Wang**’s Sigfox scaffold sensor (**WSSFM10R4AT**, **ZP_V06**, RC4 **920.8 MHz**): steel Hall pull-wire vs helical antenna.
 
 **Live site:** [https://wy901015.github.io/sigfox-antenna-sim/](https://wy901015.github.io/sigfox-antenna-sim/)
 
-## What’s inside
+## Model (v2 — more device-like)
 
-| Path | Description |
-|------|-------------|
-| `index.html` | Interactive Chart.js report (loads `sim/results/*.json`) |
-| `sim/run_simulation.py` | Main pipeline — coupled model + NEC reference |
-| `sim/results/` | Committed `summary.json`, `coupled_s11.json`, `nec_reference.json`, CSV |
-| `assets/` | PCB floorplan + simulation geometry SVG/PNG |
+| Element | Implementation |
+|--------|----------------|
+| **Helix** | PyNEC `helix()` — 22 mm × 10 mm OD, 4 mm pitch, 0.5 mm wire on PEC ground |
+| **Steel cable** | 1.3 mm braided wire, dog-leg across ANT corner; span 170 mm (extended) or 75 mm (reeled) |
+| **Spool** | 12-segment metal ring when reeled |
+| **LiPo** | Wire-frame shell ~48 mm from ANT |
+| **Plastic** | ε_eff ≈ 1.45 + shunt capacitance (not 3D dielectric mesh) |
+| **Detuning** | Hybrid: NEC Z(f) + RLC + mutual L / near-field C vs clearance (0 at ≥32 mm baseline) |
+| **Matching** | π-network optimized on **steel OUT 32 mm**, frozen for all cases |
 
-## Re-run simulation
+**Reference only:** `monopole_reference.json` — legacy 75 mm monopole NEC sweep.
+
+**Caveat:** Still approximate (not HFSS/CST). Use for keep-out trends; validate with VNA in closed housing.
+
+## Cases (6)
+
+1. Steel OUT ≥32 mm (baseline)  
+2. Steel IN ~5 mm (crossing, extended)  
+3. 15 mm / 25 mm clearance  
+4. 5 mm + reeled spool  
+5. 5 mm + cable segment parallel to helix axis  
+
+Per-case JSON: `sim/results/cases/<case_id>.json`  
+Table + curves: `sim/results/summary.json`, `coupled_s11.json`
+
+## Re-run
 
 ```bash
 python3 -m pip install -r requirements.txt
 python3 sim/run_simulation.py
-python3 sim/generate_sim_layout_svg.py   # optional: refresh assets/sim-geometry.svg
+python3 sim/generate_sim_layout_svg.py   # optional SVG
 ```
 
-Outputs are written under `sim/results/`.
+## GitHub Pages
 
-## Method (short)
-
-1. **PyNEC (NEC-2++)** thin-wire monopole (~75 mm) over perfect ground, optional horizontal steel wire (`sim/nec_model.py`). Useful reference; horizontal parasitic coupling is weak without enclosure mesh.
-2. **Coupled resonator overlay** — antenna RLC + steel parasitic mode + mutual inductance ∝ (5 mm / *d*)³ (`sim/coupled_model.py`). Drives the published S11 curves.
-3. **π-match** optimized with steel **OUT** (32 mm clearance), then frozen for the **IN** (5 mm) case.
-
-Sweep: **880–960 MHz**. Targets: resonance shift, S11 @ 920.8 MHz, rough link penalty (dB).
-
-**Caveat:** approximate model — not HFSS/CST. Validate on fully assembled hardware (plastic closed, cable min/mid/max).
-
-## Enable GitHub Pages
-
-1. Push `main` (must contain `index.html` at repo root).
-2. GitHub → **Settings** → **Pages** → **Build and deployment** → Source: **Deploy from a branch**.
-3. Branch: **`main`**, folder: **`/ (root)`**.
-4. Save; site appears at `https://<user>.github.io/sigfox-antenna-sim/` after a minute.
-
-CLI (requires `gh` auth with `repo` + `admin:repo_hook`):
-
-```bash
-gh api repos/wy901015/sigfox-antenna-sim/pages -X POST \
-  -f build_type=legacy \
-  -f source[branch]=main \
-  -f source[path]=/
-```
-
-Or enable Pages in the repository settings UI if the API is restricted.
-
-## License
-
-Simulation code and docs in this repo are provided for engineering study on the scaffold sensor project. PyNEC / NEC-2++ are GPL — see upstream licenses if you redistribute binaries.
+Settings → Pages → branch **`main`**, folder **`/`** (root `index.html`).

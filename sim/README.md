@@ -1,19 +1,17 @@
-# Simulation pipeline
+# Simulation pipeline (v2)
 
-## Geometry (`geometry.py`)
+## Files
 
-- Monopole height **75 mm** (quarter-wave electrical ~81 mm on helix).
-- Steel pull-wire: **120 mm** span, **1.2 mm** radius, height **35 mm**.
-- **IN:** 5 mm lateral clearance (violates λ/10 keep-out).
-- **OUT:** 32 mm clearance (recommended keep-out).
+- `geometry.py` — documented dimensions (helix, steel, spool, battery, enclosure)
+- `cases.py` — case matrix IDs
+- `nec_model.py` — PyNEC scene builder
+- `coupled_model.py` — hybrid Z(f) + π-match helpers
+- `run_simulation.py` — writes `results/` and `results/cases/*.json`
 
-## Scripts
+## Outputs
 
-- `run_simulation.py` — writes `results/summary.json`, `coupled_s11.json`, `nec_reference.json`, `coupled_s11.csv`.
-- `nec_model.py` — PyNEC wire model.
-- `coupled_model.py` — mutual-inductance parasitic coupling + π-match.
-- `generate_sim_layout_svg.py` — `../assets/sim-geometry.svg`.
-
-## Dependencies
-
-See root `requirements.txt` (`numpy`, `scipy`, `PyNEC`, `matplotlib` optional).
+- `results/summary.json` — geometry docs + comparison table
+- `results/coupled_s11.json` — all S11(f) curves
+- `results/cases_comparison.csv`
+- `results/nec_reference.json` — helix+battery raw NEC
+- `results/monopole_reference.json` — optional monopole reference
