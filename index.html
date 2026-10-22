@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sigfox 脚手架传感器 — 钢缆天线仿真 | Yang Wang</title>
+  <meta name="description" content="Approximate EM study: steel Hall pull-wire detuning of Sigfox RC4 helical antenna (~920.8 MHz)." />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --warn: #fbbf24;
+      --bad: #f87171;
+      --good: #4ade80;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(160deg, #0f172a 0%, #1e1b4b 55%, #0f172a 100%);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    header {
+      padding: 2.5rem 1.25rem 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); margin: 0 0 0.5rem; }
+    .subtitle { color: var(--muted); max-width: 70ch; }
+    main { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem 3rem; }
+    .grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+    .card {
+      background: rgba(30, 41, 59, 0.92);
+      border: 1px solid #334155;
+      border-radius: 14px;
+      padding: 1.1rem 1.25rem;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+    }
+    .card h2 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 0 0 0.35rem; }
+    .metric { font-size: 1.75rem; font-weight: 700; }
+    .metric small { font-size: 0.95rem; color: var(--muted); font-weight: 500; }
+    .neg { color: var(--bad); }
+    .pos { color: var(--good); }
+    section { margin-top: 2rem; }
+    section h2 { font-size: 1.25rem; border-left: 4px solid var(--accent); padding-left: 0.65rem; }
+    .en { color: var(--muted); font-size: 0.92rem; margin-top: 0.25rem; }
+    figure { margin: 1rem 0; }
+    figure img { max-width: 100%; border-radius: 10px; border: 1px solid #475569; background: #f8fafc; }
+    figcaption { color: var(--muted); font-size: 0.85rem; margin-top: 0.35rem; }
+    .chart-wrap { position: relative; height: 380px; }
+    ul.checklist li { margin: 0.35rem 0; }
+    code { background: #0b1220; padding: 0.1rem 0.35rem; border-radius: 4px; font-size: 0.9em; }
+    footer { text-align: center; color: var(--muted); font-size: 0.8rem; padding: 2rem 1rem; }
+    a { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Sigfox 脚手架传感器 — 钢拉线对螺旋天线的影响</h1>
+    <p class="subtitle">
+      Yang Wang · 近似电磁仿真（NEC-2 / 耦合谐振器）· WSSFM10R4 RC4 · 920.8&nbsp;MHz · PCB ZP_V06
+      <span class="en">Approximate EM study: Hall steel pull-wire in the antenna near-field vs ≥30&nbsp;mm keep-out.</span>
+    </p>
+  </header>
+
+  <main>
+    <div class="grid" id="summary-cards">
+      <div class="card"><h2>Δf<sub>res</sub></h2><div class="metric" id="m-df">—</div><div class="en">Resonance shift (steel IN vs OUT)</div></div>
+      <div class="card"><h2>ΔS11 @ 920.8&nbsp;MHz</h2><div class="metric" id="m-ds11">—</div><div class="en">Matched network frozen (tuned with steel OUT)</div></div>
+      <div class="card"><h2>链路惩罚（估算）</h2><div class="metric" id="m-penalty">—</div><div class="en">Relative radiated power / gain proxy (dB)</div></div>
+      <div class="card"><h2>S11（钢缆移出）</h2><div class="metric" id="m-s11-out">—</div><div class="en">At Sigfox RC4 channel</div></div>
+    </div>
+
+    <section>
+      <h2>回波损耗 S11(f)</h2>
+      <p class="en">880–960&nbsp;MHz sweep · π-match optimized with steel outside keep-out, then applied to both cases.</p>
+      <div class="card chart-wrap">
+        <canvas id="s11-chart"></canvas>
+      </div>
+    </section>
+
+    <section>
+      <h2>布局与仿真几何</h2>
+      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+        <figure>
+          <img src="assets/rf-floorplan.png" alt="PCB RF floorplan from photos" width="600" height="450" />
+          <figcaption>实物照片整理的 PCB / 天线区 / 钢缆走向（示意，非精确比例）</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/sim-geometry.png" alt="Simulation geometry side view" width="600" height="350" />
+          <figcaption>线模型几何：单极子/螺旋近似 + 水平钢缆（IN 5&nbsp;mm / OUT 32&nbsp;mm）</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section>
+      <h2>方法说明</h2>
+      <div class="card">
+        <ol>
+          <li><strong>PyNEC (NEC-2++)</strong>：75&nbsp;mm 垂直单极子 + 完美地面 + 可选 120&nbsp;mm 钢缆；输出原始阻抗（见 <code>sim/results/nec_reference.json</code>）。</li>
+          <li><strong>耦合谐振器叠加</strong>：在 920.8&nbsp;MHz 附近模拟螺旋主模与钢缆寄生模的互感（近场 ~1/<em>d</em>³）；用于站点主曲线。</li>
+          <li><strong>π 型匹配</strong>：在「钢缆移出 ≥30&nbsp;mm」状态下优化，再固定用于「钢缆靠近 ~5&nbsp;mm」对比失谐。</li>
+        </ol>
+        <p class="en">This is <em>not</em> HFSS/CST — enclosure plastic, PCB copper keep-out, and helix pitch are simplified. Use for design direction and keep-out rules, then confirm with VNA on assembled units.</p>
+        <ul id="assumptions"></ul>
+      </div>
+    </section>
+
+    <section>
+      <h2>现场检查清单</h2>
+      <div class="card">
+        <ul class="checklist">
+          <li>钢缆 / 金属件距螺旋天线 ≥25–30&nbsp;mm（λ/10 @ 920&nbsp;MHz ≈ 33&nbsp;mm）</li>
+          <li>天线下方及 keep-out 内所有层净空铜皮（按螺旋天线应用笔记）</li>
+          <li>合盖塑料外壳、钢缆最小/中/最大伸出长度下测 S11</li>
+          <li>电池与钢缆走线尽量远离 ANT 区</li>
+          <li>目标：920.8&nbsp;MHz 处 S11 &lt; −10&nbsp;dB（在最终外壳内验证）</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2>假设验证</h2>
+      <div class="card" id="hypothesis">
+        <p>假设：距离 &lt; λ/10 的钢缆是主要失谐源 — 模型中 5&nbsp;mm 间距的互感耦合显著强于 32&nbsp;mm，导致谐振下移与 S11 恶化。</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Repo: <a href="https://github.com/wy901015/sigfox-antenna-sim">github.com/wy901015/sigfox-antenna-sim</a> · 数据: <code>sim/results/</code> · 复现: <code>python3 sim/run_simulation.py</code></p>
+  </footer>
+
+  <script>
+    async function loadJSON(path) {
+      const r = await fetch(path);
+      if (!r.ok) throw new Error(path + ' ' + r.status);
+      return r.json();
+    }
+
+    function fmt(v, digits = 1, unit = '') {
+      if (v === null || v === undefined || Number.isNaN(v)) return '—';
+      return Number(v).toFixed(digits) + unit;
+    }
+
+    (async () => {
+      const [summary, coupled] = await Promise.all([
+        loadJSON('sim/results/summary.json'),
+        loadJSON('sim/results/coupled_s11.json'),
+      ]);
+
+      const m = summary.metrics;
+      document.getElementById('m-df').textContent = fmt(m.delta_f_res_mhz, 0, ' MHz');
+      document.getElementById('m-df').className = 'metric ' + (m.delta_f_res_mhz < 0 ? 'neg' : 'pos');
+      document.getElementById('m-ds11').textContent = '+' + fmt(m.delta_s11_db_at_920_8, 2, ' dB');
+      document.getElementById('m-penalty').textContent = fmt(m.estimated_link_penalty_db, 2, ' dB');
+      document.getElementById('m-s11-out').textContent = fmt(m.s11_out_db_at_920_8, 1, ' dB');
+
+      const ul = document.getElementById('assumptions');
+      summary.assumptions.forEach((t) => {
+        const li = document.createElement('li');
+        li.textContent = t;
+        ul.appendChild(li);
+      });
+
+      const ctx = document.getElementById('s11-chart');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: coupled.freq_mhz.map((f) => f.toFixed(1)),
+          datasets: [
+            {
+              label: 'Steel OUT (≥30 mm)',
+              data: coupled.s11_steel_out_db,
+              borderColor: '#38bdf8',
+              backgroundColor: 'rgba(56,189,248,0.12)',
+              tension: 0.25,
+              pointRadius: 0,
+            },
+            {
+              label: 'Steel IN (~5 mm)',
+              data: coupled.s11_steel_in_db,
+              borderColor: '#f87171',
+              backgroundColor: 'rgba(248,113,113,0.12)',
+              tension: 0.25,
+              pointRadius: 0,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { labels: { color: '#e2e8f0' } },
+            annotation: {},
+          },
+          scales: {
+            x: {
+              title: { display: true, text: 'Frequency (MHz)', color: '#94a3b8' },
+              ticks: { color: '#94a3b8', maxTicksLimit: 12 },
+              grid: { color: 'rgba(148,163,184,0.15)' },
+            },
+            y: {
+              title: { display: true, text: 'S11 (dB)', color: '#94a3b8' },
+              ticks: { color: '#94a3b8' },
+              grid: { color: 'rgba(148,163,184,0.15)' },
+            },
+          },
+        },
+      });
+
+      // Sigfox channel marker via plugin-less title
+      ctx.parentElement.insertAdjacentHTML(
+        'afterend',
+        '<p class="en" style="margin-top:0.5rem">Vertical line mentally at 920.8 MHz — RC4 uplink channel.</p>'
+      );
+    })().catch((e) => {
+      console.error(e);
+      document.body.insertAdjacentHTML(
+        'afterbegin',
+        '<p style="background:#7f1d1d;color:#fff;padding:1rem">Failed to load sim/results JSON. Run <code>python3 sim/run_simulation.py</code> and ensure GitHub Pages serves this repo root.</p>'
+      );
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="520" viewBox="0 0 900 520">
+  <style>
+    .t { font: 700 18px sans-serif; fill:#0f172a; }
+    .l { font: 12px sans-serif; fill:#334155; }
+    .d { font: 11px sans-serif; fill:#64748b; }
+  </style>
+  <rect width="900" height="520" fill="#f8fafc"/>
+  <text x="28" y="36" class="t">EM simulation geometry (side view, Y–Z plane)</text>
+  <text x="28" y="56" class="d">Monopole/helical axis at Y=0 · steel pull-wire horizontal · perfect ground (NEC)</text>
+
+  <!-- ground -->
+  <rect x="40" y="400" width="820" height="12" fill="#334155"/>
+  <text x="48" y="430" class="l">PCB ground / enclosure floor (PEC in NEC)</text>
+
+  <!-- monopole -->
+  <line x1="200" y1="400" x2="200" y2="100.0" stroke="#16a34a" stroke-width="4"/>
+  <text x="210" y="250.0" class="l">Helical / monopole (75 mm)</text>
+
+  <!-- steel IN -->
+  <line x1="120" y1="260.0" x2="520" y2="260.0" stroke="#dc2626" stroke-width="5"/>
+  <text x="530" y="264.0" class="l">Steel IN (d=5 mm)</text>
+
+  <!-- steel OUT -->
+  <line x1="120" y1="210.0" x2="520" y2="210.0" stroke="#94a3b8" stroke-width="4" stroke-dasharray="8 6"/>
+  <text x="530" y="214.0" class="l">Steel OUT (d=32 mm)</text>
+
+  <!-- dimensions -->
+  <line x1="200" y1="400" x2="200" y2="260.0" stroke="#0ea5e9" stroke-width="1" marker-end="url(#a)"/>
+  <text x="208" y="330.0" class="d">z=35 mm</text>
+  <text x="48" y="480" class="d">Span 120 mm · RC4 920.8 MHz · λ/4≈81 mm</text>
+  <defs>
+    <marker id="a" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#0ea5e9"/>
+    </marker>
+  </defs>
+</svg>

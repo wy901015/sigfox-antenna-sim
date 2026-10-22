@@ -1,0 +1,39 @@
+{
+  "generated_at": "2026-10-22T04:53:46.541149+00:00",
+  "device": {
+    "module": "WSSFM10R4AT / SFM10R4",
+    "pcb": "ZP_V06",
+    "tx_mhz": 920.8,
+    "band": "Sigfox RC4"
+  },
+  "geometry": {
+    "monopole_height_mm": 75.0,
+    "steel_span_mm": 120.0,
+    "steel_clearance_in_mm": 5.0,
+    "steel_clearance_out_mm": 32.0,
+    "quarter_wave_mm": 81.39456396611642
+  },
+  "pi_match_optimized_on": "steel_out",
+  "pi_match": {
+    "c1_pf": 5.999290482668429,
+    "l_nh": 2.0015397473973042,
+    "c2_pf": 3.894995513597188
+  },
+  "metrics": {
+    "f_res_out_mhz": 908.0,
+    "f_res_in_mhz": 885.0,
+    "delta_f_res_mhz": -23.0,
+    "s11_out_db_at_920_8": -6.04229949336116,
+    "s11_in_db_at_920_8": -4.012014170375728,
+    "delta_s11_db_at_920_8": 2.0302853229854314,
+    "estimated_link_penalty_db": 1.1539633560013298
+  },
+  "assumptions": [
+    "Helical modeled as 75 mm monopole over perfect ground (NEC) plus coupled parasitic mode.",
+    "Steel pull-wire: 1.2 mm \u00d7 120 mm horizontal segment at 35 mm height.",
+    "Pi-match components optimized with steel OUT (\u226530 mm keep-out), then frozen for IN case.",
+    "Plastic enclosure, PCB copper keep-out, and helix pitch not fully meshed (not HFSS).",
+    "Hypothesis: metal within ~\u03bb/10 (~33 mm @ 920 MHz) dominates detuning \u2014 IN case uses 5 mm."
+  ],
+  "nec_note": "PyNEC thin-wire runs show weak direct coupling for horizontal parasitic wire; coupled-resonator overlay calibrated for near-field steel interaction."
+}
